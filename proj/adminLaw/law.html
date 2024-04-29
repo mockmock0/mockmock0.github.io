@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>행정법총론 OX</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+  integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+  integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gothic+A1&display=swap" rel="stylesheet">
+<style>
+  body {
+    background-color: #BDBEB9;
+  }
+
+  .question_box {
+    margin-top: 1.5rem;
+    height: calc (100vh - 2.25rem) width: 100vw;
+  }
+
+  .card {
+    margin-bottom: 1.25rem;
+  }
+
+  .card-body {
+    background-color: #BDBEB9;
+  }
+
+  div {
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 14pt;
+  }
+
+  .btn {
+    min-width: 3rem;
+    min-height: 4rem;
+  }
+
+  .answer {
+    color: #BDBEB9;
+  }
+</style>
+
+<body>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <a class="navbar-brand mx-3" href="#" id="wrongScore" style="color: red">0</a><a> / </a>
+          <a class="navbar-brand mx-3" href="#" id="correctScore" style="color: green">0</a><a> / </a>
+          <a class="navbar-brand mx-3" href="#" id="totalQuestion" style="font-weight: bold"></a>
+          <div class=" mx-3 mt-2">틀린 번호</div><br>
+          <div class="mx-3" id="modalWrong" style="color: red"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+      <div class="alert alert-success fw-bold" role="alert">
+        Successfully Reset!
+      </div>
+    </div>
+  </div>
+
+
+  <nav class="navbar fixed-bottom bg-body-tertiary">
+    <div class="container-fluid justify-content-center row">
+      <div class="col-sm-8">
+        <select id="chapter_select" class="form-select form-select" aria-label="Large select example"
+          onchange="changed(this.value)">
+          <option selected value="1">Select Chapter</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+      <div class="col-sm-auto">
+        <button class="btn btn-outline-success ms-3" type="button" onclick="reset()" data-bs-toggle="modal"
+          data-bs-target="#exampleModal2">Reset</button>
+        <button class="btn btn-outline-primary ms-3" type="button" onclick="result()" data-bs-toggle="modal"
+          data-bs-target="#exampleModal">Result</button>
+      </div>
+    </div>
+  </nav>
+  <div class="container question_box backgrounds" id="question_box"></div>
+  <script>
+    const chp = document.getElementById("chapter_select").value;
+    const question = document.getElementById("question");
+    const questionBox = document.getElementById("question_box");
+    const wrongScore = document.getElementById("wrongScore");
+    const correctScore = document.getElementById("correctScore");
+    const totalQuestion = document.getElementById("totalQuestion");
+    const URL = "./test.json";
+    var rawData = localStorage.getItem("datasheet");
+
+    fetch(URL).then(res => res.json()).then(res => {
+      rawData = res;
+      init(1);
+    })
+
+    var wrong = 0;
+    var correct = 0;
+    var wrongNum = localStorage.getItem("wrongNum");
+    var correctNum = localStorage.getItem("correctNum");
+    var tmpWrongList = [];
+
+
+    function changed(e) {
+      init(e);
+    }
+    function init(chp) {
+      // score 가져오기
+      if (!wrongNum && !correctNum) {
+        localStorage.setItem("wrongNum", JSON.stringify(new Array()));
+        localStorage.setItem("correctNum", JSON.stringify(new Array()));
+      }
+      wrongNum = localStorage.getItem("wrongNum");
+      correctNum = localStorage.getItem("correctNum");
+      console.log(wrongNum)
+
+      let res = rawData
+      console.log(res);
+      // question 가져오기
+      let cnt = 0;
+      questionBox.innerHTML = "";
+      res.forEach((item, i) => {
+        if (item.chapter == chp) {
+          questionBox.innerHTML += `
+        <div class="card" style="width: 100%;" id="card${item.idx}">
+          <div class="card-body">
+            <h5 class="card-title" data-no="${item.idx}">${item.idx}</h5>
+            <div id="question" data-no="${item.idx}">${item.content}</div>
+            <div class="answer my-2 fs-5 fw-bold" id="answer${item.idx}" data-no="${item.idx}">${item.answer}</div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic outlined example">
+              <button class="btn btn-outline-primary" style="min-width: 10vw" type="button" id="O${item.idx}" data-no="${item.idx}" onclick=clicker(this)>O</button>
+              <button class="btn btn-outline-danger" style="min-width: 10vw" type="button" id="X${item.idx}" data-no="${item.idx}" onclick=clicker(this)>X</button>
+            </div>
+            </div>
+          </div>
+        </div>
+        `;
+          if (wrongNum.includes(parseInt(item.idx)) && item.chapter == chp) {
+            document.getElementById(`answer${item.idx}`).style.color = "red";
+          } else if (correctNum.includes(parseInt(item.idx)) && item.chapter == chp) {
+            document.getElementById(`answer${item.idx}`).style.color = "green";
+          }
+          cnt++;
+        }
+      })
+      totalQuestion.innerHTML = cnt;
+      questionBox.innerHTML += `<div style="margin-bottom: 4.5rem; color: #BDBEB9">bottom</div>`
+
+    }
+
+    function clicker(element) {
+      const answer = document.getElementById(`answer${element.dataset.no}`);
+
+      if (answer.style.color == "green" || answer.style.color == "red") return;
+      if (element.innerText === answer.innerText) {
+        answer.style.color = "green";
+        correctScore.innerHTML = parseInt(correctScore.innerHTML) + 1;
+        let tmp = JSON.parse(localStorage.getItem("correctNum"));
+        tmp.push(`${element.dataset.no}`)
+        localStorage.setItem("correctNum", JSON.stringify(tmp));
+      } else if (element.innerText !== answer.innerText) {
+        answer.style.color = "red";
+        wrongScore.innerHTML = parseInt(wrongScore.innerHTML) + 1;
+        let tmp = JSON.parse(localStorage.getItem("wrongNum"));
+        tmp.push(`${element.dataset.no}`)
+        localStorage.setItem("wrongNum", JSON.stringify(tmp));
+      }
+    }
+
+    function reset() {
+      localStorage.setItem("wrongScore", 0);
+      localStorage.setItem("correctScore", 0);
+      let localWrong = JSON.parse(localStorage.getItem("wrongNum"))
+      let localCorrect = JSON.parse(localStorage.getItem("correctNum"))
+      const answerList = []; let tempWrong = []; let tempCorrect = [];
+      document.querySelectorAll(".answer").forEach(item => {
+        if (item.style.color === "red") tempWrong.push(item.dataset.no);
+        else if (item.style.color === "green") tempCorrect.push(item.dataset.no);
+      })
+      let a = localWrong.filter(item => !tempWrong.includes(item));
+      let b = localCorrect.filter(item => !tempCorrect.includes(item));
+      localStorage.setItem("wrongNum", JSON.stringify(a));
+      localStorage.setItem("correctNum", JSON.stringify(b));
+      init(chp);
+    }
+
+    function result() {
+      let wrgCnt = 0;
+      let crtCnt = 0;
+      const answerList = document.querySelectorAll(".answer");
+      const modalWrong = document.getElementById("modalWrong");
+      modalWrong.innerHTML = "";
+
+      for (var i = 0; i < answerList.length; i++) {
+        if (answerList[i].style.color == "red") {
+          wrgCnt++;
+          modalWrong.innerHTML += `${answerList[i].dataset.no}  `;
+        }
+        else if (answerList[i].style.color == "green") {
+          crtCnt++;
+        }
+
+      }
+
+      wrongScore.innerHTML = wrgCnt
+      correctScore.innerHTML = crtCnt
+    }
+
+  </script>
+</body>
+
+</html>

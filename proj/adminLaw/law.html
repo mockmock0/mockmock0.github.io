@@ -198,7 +198,7 @@
       let b = localCorrect.filter(item => !tempCorrect.includes(item));
       localStorage.setItem("wrongNum", JSON.stringify(a));
       localStorage.setItem("correctNum", JSON.stringify(b));
-      init(chp);
+      init(document.getElementById("chapter_select"). value);
     }
 
     function result() {

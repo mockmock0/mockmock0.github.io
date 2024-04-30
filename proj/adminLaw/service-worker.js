@@ -15,10 +15,10 @@ self.addEventListener('install', function(event) {
     caches.open('my-cache').then(function(cache) {
       return cache.addAll([
         '/',
-        '/index.html',
+        '/law.html',
         '/styles/main.css',
         '/scripts/main.js',
-        '/images/logo.png'
+        '/icon-512x512.png'
         // 캐시할 리소스들을 추가합니다.
       ]);
     })

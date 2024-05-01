@@ -1,8 +1,8 @@
 {
   "background_color": "#ffffff",
   "dir": "ltr",
-  "display": "standalone",
-  "name": "Admin Law OX",
+  "display": "fullscreen",
+  "name": "행정법총론 OX",
   "orientation": "any",
   "scope": "/",
   "icons": [
@@ -12,7 +12,7 @@
       "type": "image/png"
     }
   ],
-  "short_name": "law",
+  "short_name": "행정법총론 OX",
   "start_url": "/",
   "theme_color": "#ffffff"
 }

@@ -1,7 +1,7 @@
 {
   "background_color": "#ffffff",
   "dir": "ltr",
-  "display": "standalone",
+  "display": "fullscreen",
   "name": "행정법총론 OX",
   "orientation": "any",
   "scope": "https://parkjonghyukp.github.io/proj/adminLaw/",

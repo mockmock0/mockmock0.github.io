@@ -1,10 +1,10 @@
 {
   "background_color": "#ffffff",
   "dir": "ltr",
-  "display": "fullscreen",
+  "display": "standalone",
   "name": "행정법총론 OX",
   "orientation": "any",
-  "scope": "/",
+  "scope": "https://parkjonghyukp.github.io/proj/adminLaw/",
   "icons": [
     {
       "src": "/icon-512x512.png",
@@ -14,5 +14,8 @@
   ],
   "short_name": "행정법총론 OX",
   "start_url": "https://parkjonghyukp.github.io/proj/adminLaw/law.html",
-  "theme_color": "#ffffff"
+  "theme_color": "#ffffff",
+  "id": "adminLaw",
+  "description": "Administration Law OX quiz",
+  "lang": "ko"
 }

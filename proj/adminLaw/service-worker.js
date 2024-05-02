@@ -16,8 +16,8 @@ self.addEventListener('install', function(event) {
       return cache.addAll([
         '/',
         '/law.html',
-        '/styles/main.css',
-        '/scripts/main.js',
+        '/bootstrap.min.css',
+        '/bootstrap.bundle.min.js',
         '/icon-512x512.png'
         // 캐시할 리소스들을 추가합니다.
       ]);

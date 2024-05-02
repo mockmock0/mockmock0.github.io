@@ -7,7 +7,7 @@
   "scope": "https://parkjonghyukp.github.io/proj/adminLaw/",
   "icons": [
     {
-      "src": "/icon-512x512.png",
+      "src": "https://parkjonghyukp.github.io/proj/adminLaw/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

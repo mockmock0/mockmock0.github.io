@@ -1,1 +1,8 @@
-
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.parkjonghyukp.twa",
+        "sha256_cert_fingerprints": ["1E:8E:D8:D1:99:38:3C:DB:CC:37:0A:00:3F:DD:6B:E7:9B:68:66:99:EC:73:78:F0:EE:D5:EC:E5:FF:33:87:38"]
+      }
+    }]

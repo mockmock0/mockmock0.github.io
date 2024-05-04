@@ -17,6 +17,13 @@
     background-color: #BDBEB9;
   }
 
+  .hl {
+    text-align: left;
+    color: red;
+    font-weight: bold;
+    font-size: .85rem;
+  }
+
   .question_box {
     margin-top: 1.5rem;
     height: calc (100vh - 2.25rem);
@@ -150,9 +157,9 @@
           </div>
         </div>
         `;
-          if (wrongNum.includes(parseInt(item.idx)) && item.chapter == chp) {
+          if (wrongNum.includes(item.idx) && item.chapter == chp) {
             document.getElementById(`answer${item.idx}`).style.color = "red";
-          } else if (correctNum.includes(parseInt(item.idx)) && item.chapter == chp) {
+          } else if (correctNum.includes(item.idx) && item.chapter == chp) {
             document.getElementById(`answer${item.idx}`).style.color = "green";
           }
           cnt++;

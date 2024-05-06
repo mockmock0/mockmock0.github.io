@@ -57,7 +57,7 @@
     font-size: 14pt;
   }
   .ox-btn {
-    min-width: 1rem;
+    max-width: 4rem;
     min-height: 3.5rem;
   }
   .table-back {
@@ -245,12 +245,12 @@
           <div class="card-body">
             <h5 class="card-title" data-no="${res[i].idx}">${res[i].idx}</h5>
             <div class="question timePause" id="question${res[i].idx}" data-no="${res[i].idx}">${res[i].content}</div>
-            <div class="answer my-2 fs-5 fw-bold" id="answer${res[i].idx}" data-no="${res[i].idx}">${res[i].answer}</div>
-            <div class="timeStamp" id="timeStamp${res[i].idx}" style="color:#BDBEB9;" data-no="${res[i].idx}">0</div>
+            <div class="answer my-2 fs-5 fw-bold" style=" text-align:right" id="answer${res[i].idx}" data-no="${res[i].idx}">${res[i].answer}</div>
+            <div class="timeStamp" id="timeStamp${res[i].idx}" style="color:#BDBEB9; text-align:right" data-no="${res[i].idx}">0</div>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic outlined example">
-              <button class="btn btn-outline-primary ox-btn" style="min-width: 10vw" type="button" id="O${res[i].idx}" data-no="${res[i].idx}" onclick=clicker(this)>O</button>
-              <button class="btn btn-outline-danger ox-btn" style="min-width: 10vw" type="button" id="X${res[i].idx}" data-no="${res[i].idx}" onclick=clicker(this)>X</button>
+              <button class="btn btn-outline-primary ox-btn" type="button" id="O${res[i].idx}" data-no="${res[i].idx}" onclick=clicker(this)>O</button>
+              <button class="btn btn-outline-danger ox-btn" type="button" id="X${res[i].idx}" data-no="${res[i].idx}" onclick=clicker(this)>X</button>
             </div>
             </div>
           </div>
@@ -443,5 +443,10 @@
         timeWrapper.classList.replace("border-color-blue", "border-color-yellow")
       }
     }
+
+
+
+
   </script>
+
 </html>

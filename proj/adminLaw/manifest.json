@@ -3,7 +3,7 @@
   "dir": "ltr",
   "display": "standalone",
   "name": "행정법총론 OX",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
   "scope": "https://parkjonghyukp.github.io/proj/adminLaw/",
   "icons": [
     {

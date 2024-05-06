@@ -28,7 +28,7 @@
     text-align: left;
     border-radius: 2.5rem;
     z-index: 1051;
-    backdrop-filter: blur(8px)
+    backdrop-filter: blur(15px)
   }
 
   .hl {
@@ -81,6 +81,10 @@
     border: 1.5px solid #0d6efd;
     transition : border .15s ease-out;
   }
+  .border-color-green {
+    border: 1.5px solid #198754;
+    transition : border .15s ease-out;
+  }
   .question{
     transition : filter .1s ease-out;
   }
@@ -88,7 +92,7 @@
 
 <body>
   <div class="wrapper border-color-yellow" id="timeWrapper">
-      <span id="seconds" style="margin-left: 2.75rem;">00</span>:<span id="tens" style="margin-right: 3.75rem;">00</span>
+      <span id="seconds" style="margin-left: 2.75rem;">00</span>.<span id="tens" style="margin-right: 3.75rem;">00</span>
       <button class="btn btn-warning" style="min-width: 5.5rem; margin-left:1.25rem" id="button-stop">Resume</button>
   </div>
 
@@ -104,13 +108,6 @@
           <div class=" mx-3 mt-2">시간 초과</div><br>
           <div class="mx-3" id="modalOver" style="color: red"></div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog ">
-      <div class="alert alert-success fw-bold" role="alert">
-        Successfully Reset!
       </div>
     </div>
   </div>
@@ -131,8 +128,7 @@
         </select>
       </div>
       <div class="col-sm-auto">
-        <button class="btn btn-outline-success ms-3" type="button" onclick="reset()" data-bs-toggle="modal"
-          data-bs-target="#exampleModal2">Reset</button>
+        <button class="btn btn-outline-success ms-3" type="button" onclick="reset()">Reset</button>
         <button class="btn btn-outline-primary ms-3" type="button" onclick="result()" data-bs-toggle="modal"
           data-bs-target="#exampleModal">Result</button>
       </div>
@@ -153,6 +149,9 @@
     var Interval ;
 
       buttonStop.onclick = function () {
+        if (buttonStop.innerHTML == "Reset") {
+          reset(); return;
+        }
          clearInterval(Interval);
         const temp = document.querySelectorAll(".question")
         temp.forEach(item => {
@@ -283,13 +282,33 @@
       }
       totalQuestion.innerHTML = cnt;
       questionBox.innerHTML += `<div style="margin-bottom: 4.5rem; color: #BDBEB9">bottom</div>`
+      document.querySelectorAll(".timeStamp").forEach(ii => {
+        if (ii.innerHTML === "0") {
+
+          buttonStop.classList.replace("btn-success", "btn-warning");
+          buttonStop.classList.replace("btn-primary", "btn-warning");
+          timeWrapper.classList.replace("border-color-green", "border-color-yellow");
+          timeWrapper.classList.replace("border-color-blue", "border-color-yellow");
+          buttonStop.innerHTML = "Resume";
+          return;
+        }
+          buttonStop.classList.replace("btn-warning", "btn-success");
+          timeWrapper.classList.replace("border-color-yellow", "border-color-green");
+          buttonStop.innerHTML = "Reset";
+          document.querySelectorAll(".question").forEach(item => {
+            item.classList.remove("timePause");
+          })
+          return;
+
+
+      })
     }
 
     function clicker(element) {
       const question = document.getElementById(`question${element.dataset.no}`);
       const answer = document.getElementById(`answer${element.dataset.no}`);
       const timeStamp = document.getElementById(`timeStamp${element.dataset.no}`);
-      const time = document.getElementById('seconds').innerHTML + ":" + document.getElementById("tens").innerHTML;
+      const time = document.getElementById('seconds').innerHTML + "." + document.getElementById("tens").innerHTML;
       // 정답 체크 여부
       if (answer.style.color == "green" || answer.style.color == "red" || question.classList.contains("timePause")) return;
       
@@ -323,7 +342,24 @@
       } else {
         timeStamp.style.color = "blue";
       }
-      
+
+      let answered = 0;
+      document.querySelectorAll(".timeStamp").forEach(ii => {
+        if (ii.innerHTML != "0") answered++;
+      })
+      if (answered == document.querySelectorAll(".timeStamp").length) {
+
+        clearInterval(Interval);
+        tens = "00";
+        seconds = "00";
+        appendTens.innerHTML = tens;
+        appendSeconds.innerHTML = seconds;
+
+          buttonStop.classList.replace("btn-primary", "btn-success");
+          timeWrapper.classList.replace("border-color-blue", "border-color-green");
+          buttonStop.innerHTML = "Reset";
+        return;
+      }
 
       clearInterval(Interval);
       tens = "00";
@@ -356,7 +392,14 @@
       seconds = "00";
       appendTens.innerHTML = tens;
       appendSeconds.innerHTML = seconds;
-      
+
+      if(buttonStop.innerHTML != "Resume") {
+        buttonStop.classList.replace("btn-primary", "btn-warning");
+        buttonStop.classList.replace("btn-success", "btn-warning");
+        timeWrapper.classList.replace("border-color-blue", "border-color-yellow");
+        timeWrapper.classList.replace("border-color-green", "border-color-yellow");
+        buttonStop.innerHTML = "Resume";
+      }
     }
 
     function result() {
@@ -400,10 +443,5 @@
         timeWrapper.classList.replace("border-color-blue", "border-color-yellow")
       }
     }
-
-
-
-
   </script>
-
 </html>

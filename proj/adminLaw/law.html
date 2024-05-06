@@ -81,6 +81,11 @@
     border: 1.5px solid #0d6efd;
     transition : border .15s ease-out;
   }
+  .border-color-red {
+    border: 1.5px solid #dc3545;
+    color: #dc3545;
+    transition : 5s ease;
+  }
   .border-color-green {
     border: 1.5px solid #198754;
     transition : border .15s ease-out;
@@ -103,9 +108,9 @@
           <a class="navbar-brand mx-3" href="#" id="wrongScore" style="color: red">0</a><a> / </a>
           <a class="navbar-brand mx-3" href="#" id="correctScore" style="color: green">0</a><a> / </a>
           <a class="navbar-brand mx-3" href="#" id="totalQuestion" style="font-weight: bold"></a>
-          <div class=" mx-3 mt-2">틀린 번호</div><br>
-          <div class="mx-3" id="modalWrong" style="color: red"></div>
-          <div class=" mx-3 mt-2">시간 초과</div><br>
+          <div class=" mx-3 mt-2">오답</div>
+          <div class="mx-3" id="modalWrong" style="color: red"></div><br>
+          <div class=" mx-3 mt-2">시간 초과</div>
           <div class="mx-3" id="modalOver" style="color: red"></div>
         </div>
       </div>
@@ -194,7 +199,12 @@
       if (seconds > 9){
         appendSeconds.innerHTML = seconds;
       }
+      if (seconds >= 15) {
+        timeWrapper.classList.add("border-color-red")
+      } else {
 
+        timeWrapper.classList.remove("border-color-red")
+      }
     }
 
 
@@ -282,25 +292,25 @@
       }
       totalQuestion.innerHTML = cnt;
       questionBox.innerHTML += `<div style="margin-bottom: 4.5rem; color: #BDBEB9">bottom</div>`
-      document.querySelectorAll(".timeStamp").forEach(ii => {
-        if (ii.innerHTML === "0") {
-
+      let tempCnt = 0;
+      buttonStop.classList.replace("btn-warning", "btn-success");
+      timeWrapper.classList.replace("border-color-yellow", "border-color-green");
+      buttonStop.innerHTML = "Reset";
+      document.querySelectorAll(".question").forEach(item => {
+        item.classList.remove("timePause");
+      })
+      document.querySelectorAll(".timeStamp").forEach(i => {
+        if (i.innerHTML === "0") {
           buttonStop.classList.replace("btn-success", "btn-warning");
           buttonStop.classList.replace("btn-primary", "btn-warning");
           timeWrapper.classList.replace("border-color-green", "border-color-yellow");
           timeWrapper.classList.replace("border-color-blue", "border-color-yellow");
           buttonStop.innerHTML = "Resume";
-          return;
-        }
-          buttonStop.classList.replace("btn-warning", "btn-success");
-          timeWrapper.classList.replace("border-color-yellow", "border-color-green");
-          buttonStop.innerHTML = "Reset";
           document.querySelectorAll(".question").forEach(item => {
-            item.classList.remove("timePause");
+            item.classList.add("timePause");
           })
           return;
-
-
+        }
       })
     }
 

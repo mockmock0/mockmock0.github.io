@@ -52,8 +52,9 @@
   .card-body {
     background-color: #BDBEB9;
   }
-  div {
+  article {
     font-family: 'Gothic A1', sans-serif;
+    line-height: calc(1ex / 0.32);
     font-size: 14pt;
   }
   .ox-btn {
@@ -93,6 +94,11 @@
   .question{
     transition : filter .1s ease-out;
   }
+  @supports (font-size-adjust: 1;) {
+      article {
+          font-size-adjust: 0.5;
+      }
+  }
 </style>
 
 <body>
@@ -127,7 +133,7 @@
             </div>
       <div class="col-sm-8">
         <select id="chapter_select" class="form-select form-select" aria-label="Large select example"
-          onchange="changed(this.value)">
+          onchange="setWatch('reset'); init(this.value);">
           <option selected value="1">Select Chapter</option>
           <option value="1">1. 행정작용법</option>
           <option value="2">2. 행정쟁송법</option>
@@ -153,30 +159,72 @@
     var buttonStop = document.getElementById('button-stop');
     var Interval ;
 
-      buttonStop.onclick = function () {
-        if (buttonStop.innerHTML == "Reset") {
-          reset(); return;
-        }
-         clearInterval(Interval);
-        const temp = document.querySelectorAll(".question")
-        temp.forEach(item => {
-            item.classList.toggle("timePause");
-        })
-        let buttonStopText = buttonStop.innerHTML;
-        if (buttonStopText == "Pause") {
-          buttonStop.innerHTML = "Resume";
-          buttonStop.classList.replace("btn-primary", "btn-warning");
-          timeWrapper.classList.replace("border-color-blue", "border-color-yellow")
-          
-        } else {
-          buttonStop.innerHTML = "Pause";
-          buttonStop.classList.replace("btn-warning", "btn-primary");
-          timeWrapper.classList.replace("border-color-yellow", "border-color-blue")
-          clearInterval(Interval);
-           Interval = setInterval(startTimer, 10);
-        }
-
+    function getJSON (data) {
+      return JSON.parse(localStorage.getItem(data));
     }
+    function setJSON (name, data) {
+      localStorage.setItem(name, JSON.stringify(data));
+    }
+    
+    function setBlur (e) {
+      const temp = document.querySelectorAll(".question");
+      if (e) {
+        temp.forEach(item => {
+          if (document.getElementById(`timeStamp${item.dataset.no}`).innerHTML !== "0") item.classList.remove("timePause");
+          else item.classList.add("timePause");
+        })
+      } else {
+        temp.forEach(item => {
+          item.classList.remove("timePause");
+        })
+      }
+    }
+
+    function setWatch (e) {
+      if (e === "reset") {
+        clearInterval(Interval);
+        tens = "00";
+        seconds = "00";
+        appendTens.innerHTML = tens;
+        appendSeconds.innerHTML = seconds;
+      } else if (e === "stop") {
+        clearInterval(Interval);
+      }
+    }
+    
+    function setColor (color) {
+      clearInterval(Interval);
+      if(color === "yellow") {
+        buttonStop.innerHTML = "Resume";
+        buttonStop.classList.replace("btn-primary", "btn-warning");
+        buttonStop.classList.replace("btn-success", "btn-warning");
+        timeWrapper.classList.replace("border-color-blue", "border-color-yellow")
+        timeWrapper.classList.replace("border-color-green", "border-color-yellow")
+        timeWrapper.classList.remove("border-color-red")
+      } else if (color === "blue") {
+        buttonStop.innerHTML = "Pause";
+        buttonStop.classList.replace("btn-warning", "btn-primary");
+        buttonStop.classList.replace("btn-success", "btn-primary");
+        timeWrapper.classList.replace("border-color-yellow", "border-color-blue")
+        timeWrapper.classList.replace("border-color-green", "border-color-blue")
+      } else if (color === "green") {
+        buttonStop.innerHTML = "Reset";
+        buttonStop.classList.replace("btn-primary", "btn-success");
+        buttonStop.classList.replace("btn-warning", "btn-success");
+        timeWrapper.classList.replace("border-color-blue", "border-color-green")
+        timeWrapper.classList.replace("border-color-yellow", "border-color-green")
+      }
+    }
+    buttonStop.addEventListener("click", () => {
+      if (buttonStop.innerHTML == "Pause") {
+        setBlur(true); setWatch("stop"); setColor("yellow");
+      } else if (buttonStop.innerHTML == "Reset") {
+        reset(); 
+      } else {
+        setBlur(false); setColor("blue");
+        Interval = setInterval(startTimer, 10);
+      }
+    })
     function startTimer () {
       tens++; 
 
@@ -202,7 +250,6 @@
       if (seconds >= 15) {
         timeWrapper.classList.add("border-color-red")
       } else {
-
         timeWrapper.classList.remove("border-color-red")
       }
     }
@@ -216,7 +263,7 @@
     const correctScore = document.getElementById("correctScore");
     const totalQuestion = document.getElementById("totalQuestion");
     const URL = "./law.json";
-    var rawData = localStorage.getItem("datasheet");
+    var rawData = [];
 
     fetch(URL).then(res => res.json()).then(res => {
       rawData = res;
@@ -227,21 +274,14 @@
     var correct = 0;
     var wrongNum = localStorage.getItem("wrongNum");
     var correctNum = localStorage.getItem("correctNum");
-    var answerTime = localStorage.getItem("answerTime");
     var tmpWrongList = [];
 
-
-    function changed(e) {
-      init(e);
-    }
     function init(chp) {
       // score 가져오기
       if (!wrongNum && !correctNum) {
-        localStorage.setItem("wrongNum", JSON.stringify(new Array()));
-        localStorage.setItem("correctNum", JSON.stringify(new Array()));
+        setJSON("wrongNum", new Array());
+        setJSON("correctNum", new Array());
       }
-      wrongNum = localStorage.getItem("wrongNum");
-      correctNum = localStorage.getItem("correctNum");
 
       let res = rawData
       // question 가져오기
@@ -251,23 +291,23 @@
     for (i = 0; i < res.length; i++) {
         if (res[i].chapter == chp) {
           questionBox.innerHTML += `
-        <div class="card" style="width: 100%;" id="card${res[i].idx}">
-          <div class="card-body">
-            <h5 class="card-title" data-no="${res[i].idx}">${res[i].idx}</h5>
-            <div class="question timePause" id="question${res[i].idx}" data-no="${res[i].idx}">${res[i].content}</div>
-            <div class="answer my-2 fs-5 fw-bold" style=" text-align:right" id="answer${res[i].idx}" data-no="${res[i].idx}">${res[i].answer}</div>
-            <div class="timeStamp" id="timeStamp${res[i].idx}" style="color:#BDBEB9; text-align:right" data-no="${res[i].idx}">0</div>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <div class="btn-group btn-group-sm" role="group" aria-label="Basic outlined example">
-              <button class="btn btn-outline-primary ox-btn" type="button" id="O${res[i].idx}" data-no="${res[i].idx}" onclick=clicker(this)>O</button>
-              <button class="btn btn-outline-danger ox-btn" type="button" id="X${res[i].idx}" data-no="${res[i].idx}" onclick=clicker(this)>X</button>
-            </div>
+          <div class="card" style="width: 100%;" id="card${res[i].idx}">
+            <div class="card-body">
+              <h5 class="card-title" data-no="${res[i].idx}">${res[i].idx}</h5>
+              <article class="question timePause" id="question${res[i].idx}" data-no="${res[i].idx}">${res[i].content}</article>
+              <div class="answer my-2 fs-5 fw-bold" style=" text-align:right" id="answer${res[i].idx}" data-no="${res[i].idx}">${res[i].answer}</div>
+              <div class="timeStamp" id="timeStamp${res[i].idx}" style="color:#BDBEB9; text-align:right" data-no="${res[i].idx}">0</div>
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <div class="btn-group btn-group-sm" role="group" aria-label="Basic outlined example">
+                <button class="btn btn-outline-primary ox-btn" type="button" id="O${res[i].idx}" data-no="${res[i].idx}" onclick=clicker(this)>O</button>
+                <button class="btn btn-outline-danger ox-btn" type="button" id="X${res[i].idx}" data-no="${res[i].idx}" onclick=clicker(this)>X</button>
+              </div>
+              </div>
             </div>
           </div>
-        </div>
-        `;
-          let wrongNumParse = JSON.parse(wrongNum);
-          let correctNumParse = JSON.parse(correctNum);
+          `;
+          let wrongNumParse = getJSON("wrongNum")
+          let correctNumParse = getJSON("correctNum")
           let tmpTimeStamp = document.getElementById(`timeStamp${res[i].idx}`);
           if (wrongNumParse.findIndex(item2 => item2.no == res[i].idx) != -1 && res[i].chapter == chp) {
             document.getElementById(`answer${res[i].idx}`).style.color = "red";
@@ -293,22 +333,10 @@
       totalQuestion.innerHTML = cnt;
       questionBox.innerHTML += `<div style="margin-bottom: 4.5rem; color: #BDBEB9">bottom</div>`
       let tempCnt = 0;
-      buttonStop.classList.replace("btn-warning", "btn-success");
-      timeWrapper.classList.replace("border-color-yellow", "border-color-green");
-      buttonStop.innerHTML = "Reset";
-      document.querySelectorAll(".question").forEach(item => {
-        item.classList.remove("timePause");
-      })
+      setColor("green"); setBlur(false);
       document.querySelectorAll(".timeStamp").forEach(i => {
         if (i.innerHTML === "0") {
-          buttonStop.classList.replace("btn-success", "btn-warning");
-          buttonStop.classList.replace("btn-primary", "btn-warning");
-          timeWrapper.classList.replace("border-color-green", "border-color-yellow");
-          timeWrapper.classList.replace("border-color-blue", "border-color-yellow");
-          buttonStop.innerHTML = "Resume";
-          document.querySelectorAll(".question").forEach(item => {
-            item.classList.add("timePause");
-          })
+          setColor("yellow"); setBlur(true);
           return;
         }
       })
@@ -326,21 +354,21 @@
       if (element.innerText === answer.innerText) {
         answer.style.color = "green";
         correctScore.innerHTML = parseInt(correctScore.innerHTML) + 1;
-        let tmp = JSON.parse(localStorage.getItem("correctNum"));
+        let tmp = getJSON("correctNum");
         tmp.push({
             no : `${element.dataset.no}`,
             timeStamp : `${time}`
           })
-        localStorage.setItem("correctNum", JSON.stringify(tmp));
+        setJSON("correctNum", tmp);
       } else if (element.innerText !== answer.innerText) {
         answer.style.color = "red";
         wrongScore.innerHTML = parseInt(wrongScore.innerHTML) + 1;
-        let tmp = JSON.parse(localStorage.getItem("wrongNum"));
+        let tmp = getJSON("wrongNum");
         tmp.push({
           no : `${element.dataset.no}`,
           timeStamp : `${time}`
         })
-        localStorage.setItem("wrongNum", JSON.stringify(tmp));
+        setJSON("wrongNum", tmp);
       }
 
       // 시간 체크
@@ -358,25 +386,10 @@
         if (ii.innerHTML != "0") answered++;
       })
       if (answered == document.querySelectorAll(".timeStamp").length) {
-
-        clearInterval(Interval);
-        tens = "00";
-        seconds = "00";
-        appendTens.innerHTML = tens;
-        appendSeconds.innerHTML = seconds;
-
-          buttonStop.classList.replace("btn-primary", "btn-success");
-          timeWrapper.classList.replace("border-color-blue", "border-color-green");
-          buttonStop.innerHTML = "Reset";
+        setWatch("reset"); setColor("green");
         return;
       }
-
-      clearInterval(Interval);
-      tens = "00";
-      seconds = "00";
-      appendTens.innerHTML = tens;
-      appendSeconds.innerHTML = seconds;
-
+      setWatch("reset")
       Interval = setInterval(startTimer, 10);
       
       
@@ -385,31 +398,22 @@
     function reset() {
       localStorage.setItem("wrongScore", 0);
       localStorage.setItem("correctScore", 0);
-      let localWrong = JSON.parse(localStorage.getItem("wrongNum"))
-      let localCorrect = JSON.parse(localStorage.getItem("correctNum"))
+      let localWrong = getJSON("wrongNum");
+      let localCorrect = getJSON("correctNum");
+      
       const answerList = []; let tempWrong = []; let tempCorrect = [];
+      
       document.querySelectorAll(".answer").forEach(item => {
         if (item.style.color === "red") tempWrong.push(item.dataset.no);
         else if (item.style.color === "green") tempCorrect.push(item.dataset.no);
       })
       let a = localWrong.filter(item => !tempWrong.includes(item.no));
       let b = localCorrect.filter(item => !tempCorrect.includes(item.no));
-      localStorage.setItem("wrongNum", JSON.stringify(a));
-      localStorage.setItem("correctNum", JSON.stringify(b));
+      setJSON("wrongNum", a)
+      setJSON("correctNum", b)
+      
       init(document.getElementById("chapter_select"). value);
-      clearInterval(Interval);
-      tens = "00";
-      seconds = "00";
-      appendTens.innerHTML = tens;
-      appendSeconds.innerHTML = seconds;
-
-      if(buttonStop.innerHTML != "Resume") {
-        buttonStop.classList.replace("btn-primary", "btn-warning");
-        buttonStop.classList.replace("btn-success", "btn-warning");
-        timeWrapper.classList.replace("border-color-blue", "border-color-yellow");
-        timeWrapper.classList.replace("border-color-green", "border-color-yellow");
-        buttonStop.innerHTML = "Resume";
-      }
+      setWatch("reset"); setColor("yellow");
     }
 
     function result() {
@@ -419,6 +423,7 @@
       const timeStampList = document.querySelectorAll(".timeStamp");
       const modalWrong = document.getElementById("modalWrong");
       const modalOver = document.getElementById("modalOver");
+      
       modalWrong.innerHTML = "";
       modalOver.innerHTML = "";
 
@@ -438,25 +443,12 @@
         }
       }
       
-
       wrongScore.innerHTML = wrgCnt;
       correctScore.innerHTML = crtCnt;
-      clearInterval(Interval);
-      const temp = document.querySelectorAll(".question");
 
       if (buttonStop.innerHTML == "Pause"){
-        temp.forEach(item => {
-            item.classList.toggle("timePause");
-        })
-        buttonStop.innerHTML = "Resume";
-        buttonStop.classList.replace("btn-primary", "btn-warning");
-        timeWrapper.classList.replace("border-color-blue", "border-color-yellow")
+        setWatch("stop"); setBlur(true); setColor("yellow")
       }
     }
-
-
-
-
   </script>
-
 </html>

@@ -120,6 +120,11 @@
 
   <nav class="navbar fixed-bottom bg-body-tertiary">
     <div class="container-fluid justify-content-center row">
+            <div class="col-sm-auto">
+        <button class="btn btn-outline-success ms-3" type="button" onclick="reset()">Reset</button>
+        <button class="btn btn-outline-primary ms-3" type="button" onclick="result()" data-bs-toggle="modal"
+          data-bs-target="#exampleModal">Result</button>
+            </div>
       <div class="col-sm-8">
         <select id="chapter_select" class="form-select form-select" aria-label="Large select example"
           onchange="changed(this.value)">
@@ -131,11 +136,6 @@
           <option value="5">5. 행정절차 및 정보공개</option>
           <option value="6">6. 행정상 손해전보</option>
         </select>
-      </div>
-      <div class="col-sm-auto">
-        <button class="btn btn-outline-success ms-3" type="button" onclick="reset()">Reset</button>
-        <button class="btn btn-outline-primary ms-3" type="button" onclick="result()" data-bs-toggle="modal"
-          data-bs-target="#exampleModal">Result</button>
       </div>
     </div>
   </nav>

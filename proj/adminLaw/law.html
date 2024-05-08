@@ -267,10 +267,16 @@
     const URL = "./law.json";
     var rawData = [];
 
-    fetch(URL).then(res => res.json()).then(res => {
-      rawData = res;
+    if (getJSON("data") != null) {
+      rawData = getJSON("data");
       init(1);
-    })
+    } else {
+      fetch(URL).then(res => res.json()).then(res => {
+        rawData = res;
+        setJSON("data", rawData);
+        init(1);
+      })
+    }
 
     var wrong = 0;
     var correct = 0;

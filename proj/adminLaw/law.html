@@ -266,6 +266,11 @@
     const totalQuestion = document.getElementById("totalQuestion");
     const URL = "./law.json";
     var rawData = [];
+    var wrongNum = localStorage.getItem("wrongNum");
+    var correctNum = localStorage.getItem("correctNum");
+    var wrong = 0;
+    var correct = 0;
+    var tmpWrongList = [];
 
     if (getJSON("data") != null) {
       rawData = getJSON("data");
@@ -277,12 +282,7 @@
         init(1);
       })
     }
-
-    var wrong = 0;
-    var correct = 0;
-    var wrongNum = localStorage.getItem("wrongNum");
-    var correctNum = localStorage.getItem("correctNum");
-    var tmpWrongList = [];
+    
 
     function init(chp) {
       // score 가져오기

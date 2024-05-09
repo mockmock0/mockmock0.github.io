@@ -282,7 +282,9 @@
         init(1);
       })
     }
-    
+    function shuffle(array) {
+      array.sort(() => Math.random() - 0.5);
+    }
 
     function init(chp) {
       // score 가져오기
@@ -292,6 +294,7 @@
       }
 
       let res = rawData
+      shuffle(res);
       // question 가져오기
       let cnt = 0;
       questionBox.innerHTML = "";
@@ -301,7 +304,7 @@
           questionBox.innerHTML += `
           <div class="card" style="width: 100%;" id="card${res[i].idx}">
             <div class="card-body">
-              <h5 class="card-title" data-no="${res[i].idx}">${res[i].idx}</h5>
+              <h5 class="card-title timePause" id="idx${res[i].idx}" data-no="${res[i].idx}">${res[i].idx}</h5>
               <article class="question timePause" id="question${res[i].idx}" data-no="${res[i].idx}">${res[i].content}</article>
               <div class="answer my-2 fs-5 fw-bold" style=" text-align:right" id="answer${res[i].idx}" data-no="${res[i].idx}">${res[i].answer}</div>
               <div class="timeStamp" id="timeStamp${res[i].idx}" style="color:#BDBEB9; text-align:right" data-no="${res[i].idx}">0</div>
@@ -334,7 +337,10 @@
           } else if (!(document.getElementById(`timeStamp${res[i].idx}`).innerHTML == "0") && seconds >= 0) {
             tmpTimeStamp.style.color = "blue";
           }
-          
+
+          if (document.getElementById(`timeStamp${res[i].idx}`).innerHTML != "0") {
+            document.getElementById(`idx${res[i].idx}`).classList.remove("timePause");
+          }
           cnt++;
         }
       }
@@ -355,6 +361,8 @@
       const answer = document.getElementById(`answer${element.dataset.no}`);
       const timeStamp = document.getElementById(`timeStamp${element.dataset.no}`);
       const time = document.getElementById('seconds').innerHTML + "." + document.getElementById("tens").innerHTML;
+
+      document.getElementById(`idx${element.dataset.no}`).classList.remove("timePause");
       // 정답 체크 여부
       if (answer.style.color == "green" || answer.style.color == "red" || question.classList.contains("timePause")) return;
       

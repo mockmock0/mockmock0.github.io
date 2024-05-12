@@ -27,7 +27,7 @@
     transform: translateX(-50%);
     text-align: left;
     border-radius: 2.5rem;
-    z-index: 1051;
+    z-index: 1049;
     backdrop-filter: blur(15px)
   }
 
@@ -59,6 +59,7 @@
   }
   .ox-btn {
     max-width: 4rem;
+    width: 4rem;
     min-height: 3.5rem;
   }
   .table-back {
@@ -123,11 +124,52 @@
     </div>
   </div>
 
+  <div class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="width:100%">
+        <div class="modal-body" style="width:100%">
+          <div class="row d-flex align-items-center">
+            <div class="col-4 mb-2 mt-2">
+              <button type="submit" class="btn" id="randomize_btn" style="width:100%; border: 1px solid gray" data-bs-toggle="modal"
+                data-bs-target="#settingModal">Randomize</button>
+            </div>
+            <div class="col-4 mb-2 mt-2">
+              <button type="submit" class="btn btn-outline-success" style="width:100%" onclick="reset();" data-bs-toggle="modal"
+                data-bs-target="#settingModal">Reset</button>
+            </div>
+            <div class="col-4 mb-2 mt-2">
+              <button type="submit" class="btn btn-outline-info" style="width:100%" onclick="update();" data-bs-toggle="modal"
+                data-bs-target="#settingModal">Update</button>
+            </div>
+          </div>
+          <hr>
+          <div class="row d-flex align-items-center">
+            <div class="col-2 mb-2 mt-2" style="font-size:.85rem">OX 위치</div>
+            <div class="col-5 mb-2 mt-2">
+              <input type="radio" class="btn-check"
+                name="options-base" id="leftHander" autocomplete="off" checked
+                onchange="refresher()">
+              <label class="btn" for="leftHander" style="width:100%">왼쪽</label>
+            </div>
+            <div class="col-5 mb-2 mt-2">
+              <input type="radio" class="btn-check"
+                name="options-base" id="rightHander" autocomplete="off"
+                onchange="refresher()">
+              <label class="btn" for="rightHander" style="width:100%" >오른쪽</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
 
   <nav class="navbar fixed-bottom bg-body-tertiary">
     <div class="container-fluid justify-content-center row">
             <div class="col-sm-auto">
-        <button class="btn btn-outline-success ms-3 my-1" type="button" onclick="reset()">Reset</button>
+        <button class="btn btn-outline-success ms-3 my-1" type="button" onclick="setBlur(true); setWatch('stop'); setColor('yellow');" data-bs-toggle="modal"
+          data-bs-target="#settingModal">Setting</button>
         <button class="btn btn-outline-primary ms-3 my-1" type="button" onclick="result()" data-bs-toggle="modal"
           data-bs-target="#exampleModal">Result</button>
             </div>
@@ -147,7 +189,7 @@
       </div>
     </div>
   </nav>
-  <div class="mx-4">
+  <div class="container">
     <div class="question_box backgrounds" id="question_box"></div>
   </div>
 </body>
@@ -264,26 +306,59 @@
     const wrongScore = document.getElementById("wrongScore");
     const correctScore = document.getElementById("correctScore");
     const totalQuestion = document.getElementById("totalQuestion");
-    const URL = "./law.json";
+    const randomize = document.getElementById("randomize_btn");
+    const left = document.getElementById("leftHander");
+    const right = document.getElementById("rightHander");
+    const URL = "https://parkjonghyukp.github.io/proj/adminLaw/law.json";
     var rawData = [];
     var wrongNum = localStorage.getItem("wrongNum");
     var correctNum = localStorage.getItem("correctNum");
     var wrong = 0;
     var correct = 0;
     var tmpWrongList = [];
+    var questionOrder = [];
 
+    function update () {
+      fetch(URL).then(res => res.json()).then(res => {
+        rawData = res;
+        questionOrder = rawData.map(item => item.idx);
+        setJSON("data", rawData);
+        setJSON("dataOrder", questionOrder);
+        shuffle(rawData);
+        setJSON("shuffledData", rawData);
+        init(document.getElementById("chapter_select").value);
+      })
+    }
+    
+    function refresher () {
+      init(document.getElementById('chapter_select').value);
+    }
+    
     if (getJSON("data") != null) {
-      rawData = getJSON("data");
+      rawData = getJSON("shuffledData");
+      questionOrder = getJSON("dataOrder")
       init(1);
     } else {
       fetch(URL).then(res => res.json()).then(res => {
         rawData = res;
+        questionOrder = rawData.map(item => item.idx);
         setJSON("data", rawData);
+        setJSON("dataOrder", questionOrder);
+        shuffle(rawData);
+        setJSON("shuffledData", rawData);
         init(1);
       })
     }
     function shuffle(array) {
-      array.sort(() => Math.random() - 0.5);
+      for (let index = array.length - 1; index > 0; index--) {
+        // 무작위 index 값을 만든다. (0 이상의 배열 길이 값)
+        const randomPosition = Math.floor(Math.random() * (index + 1));
+
+        // 임시로 원본 값을 저장하고, randomPosition을 사용해 배열 요소를 섞는다.
+        const temporary = array[index];
+        array[index] = array[randomPosition];
+        array[randomPosition] = temporary;
+      }
     }
 
     function init(chp) {
@@ -294,7 +369,6 @@
       }
 
       let res = rawData
-      shuffle(res);
       // question 가져오기
       let cnt = 0;
       questionBox.innerHTML = "";
@@ -305,18 +379,28 @@
           <div class="card" style="width: 100%;" id="card${res[i].idx}">
             <div class="card-body">
               <h5 class="card-title timePause" id="idx${res[i].idx}" data-no="${res[i].idx}">${res[i].idx}</h5>
-              <article class="question timePause" id="question${res[i].idx}" data-no="${res[i].idx}">${res[i].content}</article>
+              <article class="question timePause text-break" id="question${res[i].idx}" data-no="${res[i].idx}">${res[i].content}</article>
               <div class="answer my-2 fs-5 fw-bold" style=" text-align:right" id="answer${res[i].idx}" data-no="${res[i].idx}">${res[i].answer}</div>
               <div class="timeStamp" id="timeStamp${res[i].idx}" style="color:#BDBEB9; text-align:right" data-no="${res[i].idx}">0</div>
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Basic outlined example">
-                <button class="btn btn-outline-primary ox-btn" type="button" id="O${res[i].idx}" data-no="${res[i].idx}" onclick=clicker(this)>O</button>
-                <button class="btn btn-outline-danger ox-btn" type="button" id="X${res[i].idx}" data-no="${res[i].idx}" onclick=clicker(this)>X</button>
-              </div>
+              <div class="OXbtn d-flex gap-2 d-md-flex flex-row" id="btnGroup${res[i].idx}">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic outlined example">
+                  <button class="btn btn-outline-primary ox-btn" type="button" id="O${res[i].idx}" data-no="${res[i].idx}" onclick='clicker(this)'>O</button>
+                  <button class="btn btn-outline-danger ox-btn" type="button" id="X${res[i].idx}" data-no="${res[i].idx}" onclick='clicker(this)'>X</button>
+                </div>
               </div>
             </div>
           </div>
           `;
+          if (right.checked) {
+            document.getElementById(`timeStamp${res[i].idx}`).style.textAlign = "left";
+            document.getElementById(`answer${res[i].idx}`).style.textAlign = "left";
+            document.getElementById(`btnGroup${res[i].idx}`).classList.replace("flex-row","flex-row-reverse");
+          } else {
+            document.getElementById(`timeStamp${res[i].idx}`).style.textAlign = "right";
+            document.getElementById(`answer${res[i].idx}`).style.textAlign = "right";
+            document.getElementById(`btnGroup${res[i].idx}`).classList.replace("flex-row-reverse","flex-row");
+          }
+          
           let wrongNumParse = getJSON("wrongNum")
           let correctNumParse = getJSON("correctNum")
           let tmpTimeStamp = document.getElementById(`timeStamp${res[i].idx}`);
@@ -407,8 +491,18 @@
       }
       setWatch("reset")
       Interval = setInterval(startTimer, 10);
-      
-      
+
+      // 스크롤 액션
+      let OXElements = document.querySelectorAll(".OXbtn");
+      let currentOX = element.parentElement.parentElement;
+
+      for (let i = 0; i < OXElements.length; i++) {
+        if (i == OXElements.length - 1) break;
+        if (OXElements[i] === currentOX) {
+          OXElements[i + 1].scrollIntoView({ behavior: "smooth"});
+          break;
+        }
+      }
     }
 
     function reset() {
@@ -432,30 +526,43 @@
       setWatch("reset"); setColor("yellow");
     }
 
+    randomize.addEventListener('click',() => {
+      shuffle(rawData);
+      init(document.getElementById("chapter_select").value);
+    })
+
     function result() {
       let wrgCnt = 0;
       let crtCnt = 0;
       const answerList = document.querySelectorAll(".answer");
       const timeStampList = document.querySelectorAll(".timeStamp");
+      const wrongNum = getJSON("wrongNum").map(item => item.no);
+      const correctNum = getJSON("correctNum").map(item => item.no);
       const modalWrong = document.getElementById("modalWrong");
       const modalOver = document.getElementById("modalOver");
-      
+      let dataOrder = getJSON("data").filter(item => item.chapter == document.getElementById("chapter_select").value).map(item => item.idx);
+      console.log(dataOrder);
       modalWrong.innerHTML = "";
       modalOver.innerHTML = "";
-
-      for (var i = 0; i < answerList.length; i++) {
-        if (answerList[i].style.color == "red") {
+      console.log(wrongNum);
+      dataOrder.forEach((item, i) => {
+        let tmp = 0;
+        console.log(item[0])
+        if (item[0] != 'W') item = item + "";
+        else if (item[0] == undefined) {};
+    
+        if (wrongNum.includes(item)) {
           wrgCnt++;
-          modalWrong.innerHTML += `${answerList[i].dataset.no}  `;
-        }
-        else if (answerList[i].style.color == "green") {
+          modalWrong.innerHTML += `${item}  `;
+        } else if (correctNum.includes(item)) {
           crtCnt++;
         }
-      }
+      })
+    
 
       for (var i = 0; i < timeStampList.length; i++) {
         if (timeStampList[i].style.color == "red") {
-          modalOver.innerHTML += `<div>${timeStampList[i].dataset.no} - ${timeStampList[i].innerHTML}</div>`  
+          modalOver.innerHTML += `<div>${timeStampList[i].dataset.no} &nbsp|&nbsp ${timeStampList[i].innerHTML}</div>`  
         }
       }
       

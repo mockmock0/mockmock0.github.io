@@ -175,7 +175,11 @@
             </div>
       <div class="col-sm-8">
         <select id="chapter_select" class="form-select form-select my-1" aria-label="Large select example"
-          onchange="setWatch('reset'); init(this.value);">
+          onchange="
+          setWatch('reset');
+          init(this.value);
+          window.scrollTo({top: 0, behavior: "smooth",});
+        ">
           <option selected value="1">Select Chapter</option>
           <option value="1">1. 행정작용법</option>
           <option value="2">2. 행정쟁송법</option>

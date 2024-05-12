@@ -499,7 +499,12 @@
       for (let i = 0; i < OXElements.length; i++) {
         if (i == OXElements.length - 1) break;
         if (OXElements[i] === currentOX) {
-          OXElements[i + 1].scrollIntoView({ behavior: "smooth"});
+          
+          window.scrollTo({
+            top: window.pageYOffset + currentOX.getBoundingClientRect().top - (window.innerHeight * 0.15),
+            behavior: "smooth",
+          });
+          // OXElements[i + 1].scrollIntoView({ behavior: "smooth", block: "end"});
           break;
         }
       }

@@ -446,9 +446,9 @@
       const timeStamp = document.getElementById(`timeStamp${element.dataset.no}`);
       const time = document.getElementById('seconds').innerHTML + "." + document.getElementById("tens").innerHTML;
 
-      document.getElementById(`idx${element.dataset.no}`).classList.remove("timePause");
       // 정답 체크 여부
       if (answer.style.color == "green" || answer.style.color == "red" || question.classList.contains("timePause")) return;
+      document.getElementById(`idx${element.dataset.no}`).classList.remove("timePause");
       
       // 정답 체크
       if (element.innerText === answer.innerText) {

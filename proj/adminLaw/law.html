@@ -112,6 +112,11 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body">
+          <div class="mx-3">
+             <a>총 시간 : </a>
+<a id="totalTime"></a>
+          </div>
+          
           <a class="navbar-brand mx-3" href="#" id="wrongScore" style="color: red">0</a><a> / </a>
           <a class="navbar-brand mx-3" href="#" id="correctScore" style="color: green">0</a><a> / </a>
           <a class="navbar-brand mx-3" href="#" id="totalQuestion" style="font-weight: bold"></a>
@@ -550,6 +555,10 @@
       const modalWrong = document.getElementById("modalWrong");
       const modalOver = document.getElementById("modalOver");
       let dataOrder = getJSON("data").filter(item => item.chapter == document.getElementById("chapter_select").value).map(item => item.idx);
+      let totalTime = getJSON("wrongNum").map(item => parseFloat(item.timeStamp)).reduce((a,c) => a + c, 0) + getJSON("correctNum").map(item => parseFloat(item.timeStamp)).reduce((a,c) => a + c, 0)
+      let tt = document.getElementById("totalTime")
+      tt.innerHTML = ""
+      tt.innerHTML = secToMin(parseInt(totalTime));
       console.log(dataOrder);
       modalWrong.innerHTML = "";
       modalOver.innerHTML = "";
@@ -582,5 +591,14 @@
         setWatch("stop"); setBlur(true); setColor("yellow")
       }
     }
+    function secToMin(seconds) {
+
+var hour = parseInt(seconds/3600);
+var min = parseInt((seconds%3600)/60);
+var sec = seconds%60;
+
+return hour+"시간 "+min+"분 " + sec+"초"
+
+    }
   </script>
-</html>
+                </html>

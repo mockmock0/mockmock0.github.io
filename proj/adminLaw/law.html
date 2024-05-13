@@ -559,13 +559,13 @@
       let tt = document.getElementById("totalTime")
       tt.innerHTML = ""
       tt.innerHTML = secToMin(parseInt(totalTime));
-      console.log(dataOrder);
+      //console.log(dataOrder);
       modalWrong.innerHTML = "";
       modalOver.innerHTML = "";
-      console.log(wrongNum);
+      //console.log(wrongNum)
       dataOrder.forEach((item, i) => {
         let tmp = 0;
-        console.log(item[0])
+        
         if (item[0] != 'W') item = item + "";
         else if (item[0] == undefined) {};
     

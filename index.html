@@ -1,95 +1,224 @@
-<!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>jonghyuk</title>
+    <link rel="stylesheet" as="style" crossorigin="" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+    <style>
+      @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+      body {
+        font-family: Pretendard Variable;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 2rem;
+        height: 100vh;
+        overflow: none;
+        font-size: 1.1rem;
+        margin: 0;
+        transform: translate-x(50%);
+      }
+      .container {
+        width: 600px;
+        max-width: 100%;
+        position: relative;
+        z-index: 2;
+        height: fit-content;
+        padding: 2rem 1.5rem;
+        border-radius: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1.5rem;
+        background: #f9f9f9;
+        pointer-events: auto;
+        transition: all 0.1s ease-out;
+      }
+      .no-display {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+        z-index: 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s ease-out;
+      }
+      @media (max-width: 680px) {
+        .container {
+          opacity: 0;
+          pointer-events: none;
+        }
+        .no-display {
+          opacity: 1;
+        }
+      }
+      select,
+      button,
+      label {
+        font-size: 1.1rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        border: 1px solid #3772ff;
+        background: transparent;
+        transition: all 0.1s ease-out;
+      }
+      button {
+        background-color: #3772ff;
+        color: white;
+      }
+      input {
+        flex: 1 1 0;
+        height: 100%;
+        border-radius: 0.5rem;
+        border: 1px solid #3772ff;
+        padding: 0 0.5rem;
+        height: 2.5rem;
+      }
+      input::-webkit-input-placeholder {
+        font-family: Pretendard Variable;
+      }
+      button:active {
+        scale: 0.9;
+      }
+      .user-none {
+        user-select: none;
+      }
+      input:checked > label {
+        opacity: 1;
+      }
+      label {
+        border: none;
+      }
+      input[type="radio"] {
+        display: none;
+      }
+      main {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 600px;
+        max-width: 100%;
+        gap: 0.5rem;
+        padding: 0;
+      }
+      .flex {
+        display: flex;
+        gap: 0.25rem;
+        width: 50%;
+        justify-content: center;
+        align-items: center;
+      }
+      input[type="radio"]:checked + label {
+        background-color: #3772ff;
+        color: white;
+      }
+      .w-def {
+        width: 600px;
+        max-width: 100%;
+      }
+      .result {
+        line-height: 160%;
+      }
+      .title-result {
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
+      footer {
+        user-select: all;
+      }
+    </style>
+    <style type="text/css" id="operaUserStyle"></style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="w-def user-none">
+        <input type="radio" name="depart" id="학교지원과" checked="">
+        <label for="학교지원과">학교지원과</label>
+        <input type="radio" name="depart" id="시설과">
+        <label for="시설과">시설과</label>
+        <input type="radio" name="depart" id="교육안전과">
+        <label for="교육안전과">교육안전과</label>
+        <input type="radio" name="depart" id="행정지원과">
+        <label for="행정지원과">행정지원과</label>
+        <input type="radio" name="depart" id="기획예산관">
+        <label for="기획예산관">기획예산관</label>
+        <input type="radio" name="depart" id="총무과">
+        <label for="총무과">총무과</label>
+      </header>
+      <main class="w-def user-none">
+        <input class="title" placeholder="제출 대상">
+        <input class="num" type="number" placeholder="공문 번호">
+        <input class="date" type="date">
+      </main>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>jonghyuk</title>
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
-</head>
-  <style>
-    @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
-    body { font-family: Pretendard Variable; display: flex; justify-content: center; align-items:center; flex-direction: column; gap: 2rem; height: 100vh; overflow: none;  font-size: 1.1rem; margin: 0; transform: translate-x(50%)}
-    select, button, label { font-size: 1.1rem; padding: .5rem .75rem; border-radius: .5rem; cursor: pointer; border: 1px solid #3772FF; background: transparent; transition: all 0.1s ease-out}
-    button {background-color: #3772FF; color: white; }
-    input { flex: 1 1 0; height: 100%; border-radius: 0.5rem; border: 1px solid #3772ff; padding: 0 .5rem; height: 2.5rem; }
-    input::-webkit-input-placeholder { font-family: Pretendard Variable; }
-    button:active { scale: 0.9; }
-    .user-none {user-select: none;}
-    input:checked > label { opacity: 1; }
-    label { border: none; }
-    input[type="radio"] { display: none; }
-    main { display: flex; flex-direction: row; align-items: center; width: 600px; gap: .5rem; padding: 0; }
-    .flex { display: flex; gap: .25rem; width: 50%; justify-content:center; align-items: center; }
-    input[type="radio"]:checked + label {background-color: #3772FF; color: white; }
-    .w-def { width: 600px; }
-    .result { line-height: 160%;}
-    .title-result { font-size: 1.4rem; font-weight: bold}
-    footer { user-select: all; }
-  </style><body>
-<div style="width: 600px; height: fit-content; padding: 2rem 1.5rem; border-radius: 1.5rem; display: flex; align-items:center; justify-content:center; flex-direction: column; gap: 1.5rem; background: #f9f9f9">
+      <footer class="title-result w-def" style="user-select: auto"> 제출</footer>
+      <footer class="result w-def" style="user-select: auto">1. 관련: 학교지원과- (2025. 1. 1.)<br>2. 위 호와 관련하여 를 붙임과 같이 제출하고자 합니다.<br><br>붙임 &nbsp; 1부. &nbsp;끝.</footer>
+      <main>
+        <button class="btn-copy" style="height: 100%">본문 복사</button>
+      </main>
+    </div>
+    <div class="no-display">가로 길이를 늘려주세요</div>
+    <script>
+      const setJosa = (word) =>
+        (word.charCodeAt(word.length - 1) - 0xac00) % 28 > 0 ? word + "을" : word + "를";
 
-<header class="w-def user-none">
-  <input type='radio' name='depart' id='학교지원과' checked/>
-  <label for='학교지원과'>학교지원과</label>
-  <input type='radio' name='depart' id='시설과'/>
-  <label for='시설과'>시설과</label>
-  <input type='radio' name='depart' id='교육안전과'/>
-  <label for='교육안전과'>교육안전과</label>
-  <input type='radio' name='depart' id='행정지원과'/>
-  <label for='행정지원과'>행정지원과</label>
-  <input type='radio' name='depart' id='기획예산관'/>
-  <label for='기획예산관'>기획예산관</label>
-  <input type='radio' name='depart' id='총무과'/>
-  <label for='총무과'>총무과</label>
-</header>
-  <main class="w-def user-none">
-    <input class='title' placeholder='제출 대상' />
-    <input class='num' type='number' placeholder='공문 번호'  />
-    <input class='date' type='date' />
-  </main>
+      const num = document.querySelector(".num"),
+        date = document.querySelector(".date"),
+        title = document.querySelector(".title"),
+        copy = document.querySelector(".btn-copy"),
+        result = document.querySelector(".result"),
+        titleResult = document.querySelector(".title-result");
 
-<footer class='title-result w-def' style='user-select: auto;'></footer>
-<footer class='result w-def' style='user-select: auto;'></footer>
-  <main>
-    <button class='btn-copy' style="height: 100%">본문 복사</button>
-  </main>
+      const 학교지원과 = document.getElementById("학교지원과"),
+        시설과 = document.getElementById("시설과"),
+        교육안전과 = document.getElementById("교육안전과"),
+        행정지원과 = document.getElementById("행정지원과"),
+        기획예산관 = document.getElementById("기획예산관"),
+        총무과 = document.getElementById("총무과");
 
-</div>
-<script>
+      const keyupArr = [num, title];
+      for (let component of keyupArr) component.addEventListener("keyup", () => render());
 
-const setJosa = (word) => (word.charCodeAt(word.length - 1) - 0xac00) % 28 > 0 ? word + '을' : word + '를'
+      const clickArr = [학교지원과, 시설과, 교육안전과, 행정지원과, 기획예산관, 총무과];
+      for (let component of clickArr) component.addEventListener("click", () => render());
 
-const num = document.querySelector(".num"), date = document.querySelector(".date"), title = document.querySelector(".title"), copy = document.querySelector(".btn-copy"), result = document.querySelector(".result"), titleResult = document.querySelector(".title-result");
+      date.addEventListener("change", () => render());
 
-const 학교지원과 = document.getElementById("학교지원과"),시설과 = document.getElementById("시설과"),교육안전과 = document.getElementById("교육안전과"),행정지원과 = document.getElementById("행정지원과"),기획예산관 = document.getElementById("기획예산관"),총무과 = document.getElementById("총무과");
+      const render = () => {
+        if (!date.value) date.value = new Date();
+        let c = "";
+        for (let item of clickArr) item.checked ? (c = item.id) : null;
+        let t = date.value.split("-");
+        (t[1] = isNaN(Number(t[1])) ? 1 : Number(t[1])),
+          (t[2] = isNaN(Number(t[2])) ? 1 : Number(t[2]));
+        const tempDate = t[0] + ". " + t[1] + ". " + t[2] + ".";
 
-const keyupArr = [num, title];
-for (let component of keyupArr) component.addEventListener('keyup', () => render());
+        titleResult.innerHTML = title.value + " 제출";
 
-const clickArr = [학교지원과, 시설과, 교육안전과, 행정지원과, 기획예산관, 총무과];
-for (let component of clickArr) component.addEventListener('click', () => render());
+        result.innerHTML = `1. 관련: ${c}-${
+          num.value
+        } (${tempDate})<br/>2. 위 호와 관련하여 ${setJosa(
+          title.value
+        )} 붙임과 같이 제출하고자 합니다.<br/><br/>붙임 &nbsp;${
+          title.value
+        } 1부. &nbsp;끝.`;
+      };
 
-date.addEventListener('change', () => render());
+      render();
 
-const render = () => {
-  if (!date.value) date.value = new Date();
-  let c = "";
-  for (let item of clickArr ) item.checked ? c = item.id : null;
-  let t = date.value.split("-");
-  t[1] =  isNaN(Number(t[1])) ? 1 : Number(t[1]), t[2] =  isNaN(Number(t[2])) ? 1 : Number(t[2]);
-  const tempDate = t[0] + ". " + t[1] + ". " + t[2] + ".";
-
-  titleResult.innerHTML = title.value + " 제출";
-
-  result.innerHTML = 
-  `1. 관련: ${c}-${num.value} (${tempDate})<br/>2. 위 호와 관련하여 ${setJosa(title.value)} 붙임과 같이 제출하고자 합니다.<br/><br/>붙임 &nbsp;${title.value} 1부. &nbsp;끝.`;
-}
-
-render();
-
-copy.addEventListener('click', () => navigator.clipboard.writeText(result.innerText));
-
-</script>
-</body>
-</html>
+      copy.addEventListener("click", () =>
+        navigator.clipboard.writeText(result.innerText)
+      );
+    </script>
+</body></html>

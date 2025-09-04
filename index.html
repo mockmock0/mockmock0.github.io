@@ -5,37 +5,91 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>jonghyuk</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
 </head>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-  integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-  integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gothic+A1&display=swap" rel="stylesheet">
-</head>
-<style>
-  .card {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+  <style>
+    @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+    body { font-family: Pretendard Variable; display: flex; justify-content: center; align-items:center; flex-direction: column; gap: 2rem; height: 100vh; overflow: none;  font-size: 1.1rem; margin: 0; transform: translate-x(50%)}
+    select, button, label { font-size: 1.1rem; padding: .5rem .75rem; border-radius: .5rem; cursor: pointer; border: 1px solid #3772FF; background: transparent; transition: all 0.1s ease-out}
+    button {background-color: #3772FF; color: white; }
+    input { flex: 1 1 0; height: 100%; border-radius: 0.5rem; border: 1px solid #3772ff; padding: 0 .5rem; height: 2.5rem; }
+    input::-webkit-input-placeholder { font-family: Pretendard Variable; }
+    button:active { scale: 0.9; }
+    .user-none {user-select: none;}
+    input:checked > label { opacity: 1; }
+    label { border: none; }
+    input[type="radio"] { display: none; }
+    main { display: flex; flex-direction: row; align-items: center; width: 600px; gap: .5rem; padding: 0; }
+    .flex { display: flex; gap: .25rem; width: 50%; justify-content:center; align-items: center; }
+    input[type="radio"]:checked + label {background-color: #3772FF; color: white; }
+    .w-def { width: 600px; }
+    .result { line-height: 160%;}
+    .title-result { font-size: 1.4rem; font-weight: bold}
+    footer { user-select: all; }
+  </style><body>
+<div style="width: 600px; height: fit-content; padding: 2rem 1.5rem; border-radius: 1.5rem; display: flex; align-items:center; justify-content:center; flex-direction: column; gap: 1.5rem; background: #f9f9f9">
 
-  }
-</style>
-<body>
-<div class="container" style="height:100vh">
-  <div class="card my-auto" style="width: 100%;">
-    <div class="card-body">
-      <h5 class="card-title">@mockmock0</h5>
-      <p class="card-text">main page of mockmock's archives</p>
-      <hr>
-      <h5>Archive List</h5>
-      <a href="https://parkjonghyukp.github.io/proj/adminLaw/law.html" class="card-link">Law OX Quiz</a>
-    </div>
-  </div>
+<header class="w-def user-none">
+  <input type='radio' name='depart' id='학교지원과' checked/>
+  <label for='학교지원과'>학교지원과</label>
+  <input type='radio' name='depart' id='시설과'/>
+  <label for='시설과'>시설과</label>
+  <input type='radio' name='depart' id='교육안전과'/>
+  <label for='교육안전과'>교육안전과</label>
+  <input type='radio' name='depart' id='행정지원과'/>
+  <label for='행정지원과'>행정지원과</label>
+  <input type='radio' name='depart' id='기획예산관'/>
+  <label for='기획예산관'>기획예산관</label>
+  <input type='radio' name='depart' id='총무과'/>
+  <label for='총무과'>총무과</label>
+</header>
+  <main class="w-def user-none">
+    <input class='title' placeholder='제출 대상' />
+    <input class='num' type='number' placeholder='공문 번호'  />
+    <input class='date' type='date' />
+  </main>
+
+<footer class='title-result w-def' style='user-select: auto;'></footer>
+<footer class='result w-def' style='user-select: auto;'></footer>
+  <main>
+    <button class='btn-copy' style="height: 100%">본문 복사</button>
+  </main>
+
 </div>
+<script>
+
+const setJosa = (word) => (word.charCodeAt(word.length - 1) - 0xac00) % 28 > 0 ? word + '을' : word + '를'
+
+const num = document.querySelector(".num"), date = document.querySelector(".date"), title = document.querySelector(".title"), copy = document.querySelector(".btn-copy"), result = document.querySelector(".result"), titleResult = document.querySelector(".title-result");
+
+const 학교지원과 = document.getElementById("학교지원과"),시설과 = document.getElementById("시설과"),교육안전과 = document.getElementById("교육안전과"),행정지원과 = document.getElementById("행정지원과"),기획예산관 = document.getElementById("기획예산관"),총무과 = document.getElementById("총무과");
+
+const keyupArr = [num, title];
+for (let component of keyupArr) component.addEventListener('keyup', () => render());
+
+const clickArr = [학교지원과, 시설과, 교육안전과, 행정지원과, 기획예산관, 총무과];
+for (let component of clickArr) component.addEventListener('click', () => render());
+
+date.addEventListener('change', () => render());
+
+const render = () => {
+  if (!date.value) date.value = new Date();
+  let c = "";
+  for (let item of clickArr ) item.checked ? c = item.id : null;
+  let t = date.value.split("-");
+  t[1] =  isNaN(Number(t[1])) ? 1 : Number(t[1]), t[2] =  isNaN(Number(t[2])) ? 1 : Number(t[2]);
+  const tempDate = t[0] + ". " + t[1] + ". " + t[2] + ".";
+
+  titleResult.innerHTML = title.value + " 제출";
+
+  result.innerHTML = 
+  `1. 관련: ${c}-${num.value} (${tempDate})<br/>2. 위 호와 관련하여 ${setJosa(title.value)} 붙임과 같이 제출하고자 합니다.<br/><br/>붙임 &nbsp;${title.value} 1부. &nbsp;끝.`;
+}
+
+render();
+
+copy.addEventListener('click', () => navigator.clipboard.writeText(result.innerText));
+
+</script>
 </body>
 </html>

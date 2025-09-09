@@ -10,20 +10,23 @@
     .wh-100 { width: 100vw; height: 100vh }
     .flex { display: flex; }
     .center { justify-content: center; align-items: center; }
-    main { height: 100vh }
-    aside { display: flex; flex-direction: column; gap: .5rem; padding: 1rem 1rem;; background-color: #3772FF; border-radius: 1rem; }
-    .d-none { display: none; }
-    .toggle { background-color: #3772FF; color: white; width: calc(100% - 1.5rem); padding: .5rem .75rem; border-radius: .5rem; transition: all 0.1s ease-out; font-size: 1.2rem; user-select: none; cursor: pointer;  }
+    .col { flex-direction: column; }
+    .g-1 { gap: 1rem; }
+    .g-5 { gap: .5rem; }
+    aside { display: flex; flex-direction: column; gap: .5rem; width: 18rem; padding: 1rem 1rem;; background-color: #3772FF; border-radius: 1rem; }
+    .none { display: none; }
+    .toggle { background-color: #3772FF; color: white; width: calc(100% - 1.5rem); padding: .5rem .75rem; border-radius: .5rem; transition: all 0.1s ease-out; font-size: 1.2rem; user-select: none; cursor: pointer; }
     .toggle:hover { background-color: #5b8cff }
     .toggle:active { scale: 0.92; }
   </style>
   <body class="pm-0 wh-100 flex center">
-    <main class="flex center">
-      <aside>
-        <input type="radio" id="calendar" class="d-none"/>
-        <label for="calendar" class="toggle" onclick="location.href='./proj/template/index.html'">제출공문 생성기</label>
-        <input type="radio" id="calendar" class="d-none"/>
-        <label for="calendar" class="toggle" onclick="location.href='./proj/todo.html'">Drag and Drop 일정표</label>
+    <main class="flex center col g-1">
+      <aside class="g-5 flex col">
+        <div class="toggle" onclick="location.href='./proj/template/index.html'">제출공문 생성기</div>
+        <div class="toggle" onclick="location.href='./proj/todo.html'">Drag and Drop 일정표</div>
+      </aside>
+      <aside class="g-5 flex col">
+          <div class="toggle" onclick="location.href='./proj/adminLaw/law.html'">행정법총론 OX</div>
       </aside>
     </main>
   </body>

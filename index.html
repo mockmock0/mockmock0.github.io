@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>교행직 업무 도구사이트</title>
+  </head>
+  <style>
+    .pm-0 { padding: 0; margin: 0; }
+    .wh-100 { width: 100vw; height: 100vh }
+    .flex { display: flex; }
+    .center { justify-content: center; align-items: center; }
+    main { height: 100vh }
+    aside { display: flex; flex-direction: column; gap: .5rem; padding: 1rem 1rem;; background-color: #3772FF; border-radius: 1rem; }
+    .d-none { display: none; }
+    .toggle { background-color: #3772FF; color: white; width: calc(100% - 1.5rem); padding: .5rem .75rem; border-radius: .5rem; transition: all 0.1s ease-out; font-size: 1.2rem; user-select: none; cursor: pointer;  }
+    .toggle:hover { background-color: #5b8cff }
+    .toggle:active { scale: 0.92; }
+  </style>
+  <body class="pm-0 wh-100 flex center">
+    <main class="flex center">
+      <aside>
+        <input type="radio" id="calendar" class="d-none"/>
+        <label for="calendar" class="toggle" onclick="location.href='./proj/template/index.html'">제출공문 생성기</label>
+        <input type="radio" id="calendar" class="d-none"/>
+        <label for="calendar" class="toggle" onclick="location.href='./proj/todo.html'">Drag and Drop 일정표</label>
+      </aside>
+    </main>
+  </body>
+</html>
